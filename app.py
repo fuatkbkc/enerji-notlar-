@@ -74,7 +74,7 @@ st.markdown("""
         font-size: 1.3rem;
         color: #1a1a1a;
         font-weight: 600;
-        margin-bottom: 0.5rem;
+        margin-bottom: 2.5rem;
         line-height: 1.4;
     }
     
