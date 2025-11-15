@@ -5,7 +5,7 @@ from datetime import datetime
 
 # Sayfa ayarı
 st.set_page_config(
-    page_title="Enerji Veri Blog",
+    page_title="Enerji Verileri",
     page_icon="⚡",
     layout="wide"
 )
