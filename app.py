@@ -114,6 +114,36 @@ st.markdown("""
         transform: translateY(-2px);
     }
     
+    .blog-title {
+        font-size: 1.3rem;
+        color: #1a1a1a;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+    }
+    
+    .blog-meta {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+    
+    .blog-tags {
+        font-size: 0.8rem;
+        color: #1f77b4;
+        background: #e3f2fd;
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        display: inline-block;
+        margin-right: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    
+    .blog-date {
+        color: #888;
+        font-weight: 500;
+    }
+    
     /* Boş İçerik Mesajı */
     .empty-message {
         text-align: center;
@@ -171,6 +201,10 @@ def load_data():
         else:
             initial_data = {
                 "basliklar": {
+                    "Bölgeler": [
+                        "Tüm Dünya", "AB", "Avrupa", "Asya", "Orta Asya", "Afrika", 
+                        "Ortadoğu", "Kuzey Amerika", "Güney Amerika", "Avustralya & Okyanusya"
+                    ],
                     "Ülkeler": [
                         "Almanya", "Türkiye", "ABD", "Fransa", "Çin", "Rusya", 
                         "Japonya", "İngiltere", "İtalya", "İspanya", "Hindistan",
@@ -267,28 +301,35 @@ def main():
 def show_content():
     data = load_data()
     
-    # Simetrik Filtre Container
+    # Simetrik Filtre Container - 4 sütun
     st.markdown('<div class="filter-container">', unsafe_allow_html=True)
     st.markdown('<div class="filter-grid">', unsafe_allow_html=True)
     
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
     
     with col1:
+        st.markdown('<div class="filter-label">🌍 BÖLGE</div>', unsafe_allow_html=True)
+        bolge_filter = st.selectbox("bolge_select", ["Tümü"] + data["basliklar"]["Bölgeler"], label_visibility="collapsed")
+    
+    with col2:
         st.markdown('<div class="filter-label">📍 ÜLKE</div>', unsafe_allow_html=True)
         ulke_filter = st.selectbox("ulke_select", ["Tümü"] + data["basliklar"]["Ülkeler"], label_visibility="collapsed")
     
-    with col2:
+    with col3:
         st.markdown('<div class="filter-label">⚡ KAYNAK</div>', unsafe_allow_html=True)
         enerji_filter = st.selectbox("enerji_select", ["Tümü"] + data["basliklar"]["Enerji Kaynakları"], label_visibility="collapsed")
     
-    with col3:
+    with col4:
         st.markdown('<div class="filter-label">📊 KATEGORİ</div>', unsafe_allow_html=True)
         kategori_filter = st.selectbox("kategori_select", ["Tümü"] + data["basliklar"]["Kategoriler"], label_visibility="collapsed")
     
     st.markdown('</div></div>', unsafe_allow_html=True)
     
-    # İçerikleri filtreleme - EKSİK OLAN KISIM
+    # İçerikleri filtreleme
     filtered_content = data["icerikler"]
+    
+    if bolge_filter != "Tümü":
+        filtered_content = [c for c in filtered_content if c.get("bolge") == bolge_filter]
     
     if ulke_filter != "Tümü":
         filtered_content = [c for c in filtered_content if c["ulke"] == ulke_filter]
@@ -308,27 +349,38 @@ def show_content():
         return
     
     for content in reversed(filtered_content):
-        # Yazar ismini kısalt (örnek: "KADİR ERTUĞRUL" -> "KADİR E.")
-        author_parts = content["yazar"].split()
-        short_author = f"{author_parts[0]} {author_parts[1][0]}." if len(author_parts) > 1 else content["yazar"]
-        
         # Tarihi formatla
         date_obj = datetime.strptime(content["tarih"], "%Y-%m-%d %H:%M:%S")
         formatted_date = date_obj.strftime("%d %b %Y").upper()
         
         with st.container():
+            # Etiketleri oluştur
+            tags = []
+            if content.get("bolge"):
+                tags.append(content["bolge"])
+            if content["ulke"]:
+                tags.append(content["ulke"])
+            if content["enerji_kaynagi"]:
+                tags.append(content["enerji_kaynagi"])
+            if content["kategori"]:
+                tags.append(content["kategori"])
+            
+            tags_html = "".join([f'<span class="blog-tags">{tag}</span>' for tag in tags])
+            
             st.markdown(f"""
             <div class="blog-card">
                 <div class="blog-title">{content['icerik_baslik']}</div>
                 <div class="blog-meta">
-                    <span class="blog-author">{short_author}</span> 
-                    · <span class="blog-date">{formatted_date}</span>
+                    <span class="blog-date">{formatted_date}</span>
                 </div>
+                <div>{tags_html}</div>
             </div>
             """, unsafe_allow_html=True)
             
             # Detayları göster/gizle
             with st.expander("", expanded=False):
+                if content.get("bolge"):
+                    st.write("**🌍 Bölge:**", content["bolge"])
                 st.write("**📍 Ülke:**", content["ulke"])
                 st.write("**⚡ Enerji Kaynağı:**", content["enerji_kaynagi"])
                 st.write("**📊 Kategori:**", content["kategori"])
@@ -343,7 +395,7 @@ def show_content():
     
     # Daha fazla butonu
     st.markdown("---")
-    st.markdown('<div class="load-more">DAHA FAZLA İÇERİK</div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; margin: 2rem 0; color: #1f77b4; font-weight: 600;">DAHA FAZLA İÇERİK</div>', unsafe_allow_html=True)
 
 # Yeni İçerik Ekleme
 def add_content():
@@ -355,29 +407,31 @@ def add_content():
         col1, col2 = st.columns(2)
         
         with col1:
-            yazar = st.text_input("👤 Yazar", value="")
-            ulke = st.selectbox("📍 Ülke", data["basliklar"]["Ülkeler"])
-            enerji_kaynagi = st.selectbox("⚡ Enerji Kaynağı", data["basliklar"]["Enerji Kaynakları"])
+            bolge = st.selectbox("🌍 Bölge (İsteğe Bağlı)", [""] + data["basliklar"]["Bölgeler"])
+            ulke = st.selectbox("📍 Ülke (İsteğe Bağlı)", [""] + data["basliklar"]["Ülkeler"])
         
         with col2:
-            kategori = st.selectbox("📊 Kategori", data["basliklar"]["Kategoriler"])
-            icerik_baslik = st.text_input("📝 Başlık", placeholder="Örn: Çin - Elektrik üretimi")
+            enerji_kaynagi = st.selectbox("⚡ Enerji Kaynağı (İsteğe Bağlı)", [""] + data["basliklar"]["Enerji Kaynakları"])
+            kategori = st.selectbox("📊 Kategori (İsteğe Bağlı)", [""] + data["basliklar"]["Kategoriler"])
         
-        icerik_metin = st.text_area("📄 İçerik", height=150, 
+        icerik_baslik = st.text_input("📝 Başlık *", placeholder="Örn: Çin - Elektrik üretimi")
+        icerik_metin = st.text_area("📄 İçerik *", height=150, 
                                    placeholder="Detaylı içeriği buraya yazın...")
+        
+        st.markdown("**\* Zorunlu alanlar**")
         
         submitted = st.form_submit_button("📤 İçeriği Yayınla", use_container_width=True)
         
         if submitted:
-            if not all([icerik_baslik, icerik_metin, yazar]):
-                st.error("Lütfen tüm alanları doldurun!")
+            if not icerik_baslik or not icerik_metin:
+                st.error("Lütfen başlık ve içerik alanlarını doldurun!")
             else:
                 yeni_icerik = {
                     "id": len(data["icerikler"]) + 1,
-                    "yazar": yazar,
-                    "ulke": ulke,
-                    "enerji_kaynagi": enerji_kaynagi,
-                    "kategori": kategori,
+                    "bolge": bolge if bolge else "",
+                    "ulke": ulke if ulke else "",
+                    "enerji_kaynagi": enerji_kaynagi if enerji_kaynagi else "",
+                    "kategori": kategori if kategori else "",
                     "icerik_baslik": icerik_baslik,
                     "icerik_metin": icerik_metin,
                     "tarih": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
