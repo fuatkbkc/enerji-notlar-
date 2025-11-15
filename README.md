@@ -1,0 +1,2 @@
+# enerji-notlar-
+Enerji notları
