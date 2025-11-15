@@ -15,17 +15,23 @@ st.set_page_config(
 # Modern CSS
 st.markdown("""
 <style>
+    /* Ana arkaplan */
+    .stApp {
+        background-color: #f8f6f0 !important;
+    }
+    
     /* Ana stil */
     .main {
         padding: 2rem 1rem;
         max-width: 1200px;
         margin: 0 auto;
+        background-color: transparent;
     }
     
     /* Geniş Header */
     .main-header {
         font-size: 2.5rem;
-        color: #1a1a1a;
+        color: #2c3e50;
         text-align: center;
         margin-bottom: 2rem;
         font-weight: 700;
@@ -40,9 +46,10 @@ st.markdown("""
         max-width: 900px;
         margin: 0 auto 2rem auto;
         padding: 1.5rem;
-        background: #f8f9fa;
+        background: #fefefe;
         border-radius: 12px;
-        border: 1px solid #e1e5e9;
+        border: 1px solid #e8e6e1;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     
     /* Filtre Grid - Eşit Genişlik */
@@ -61,7 +68,7 @@ st.markdown("""
     /* Filtre Başlıkları */
     .filter-label {
         font-size: 0.9rem;
-        color: #666;
+        color: #5d6d7e;
         margin-bottom: 0.5rem;
         font-weight: 500;
         text-align: center;
@@ -70,7 +77,8 @@ st.markdown("""
     /* Selectbox Stilleri */
     .stSelectbox>div>div>div {
         border-radius: 8px;
-        border: 1px solid #d1d5db;
+        border: 1px solid #d5dbdb;
+        background: white;
     }
     
     /* İçerik Alanı */
@@ -84,10 +92,10 @@ st.markdown("""
     /* Bölüm Başlıkları */
     .section-header {
         font-size: 1.5rem;
-        color: #1a1a1a;
+        color: #2c3e50;
         margin: 2rem 0 1.5rem 0;
         font-weight: 600;
-        border-bottom: 2px solid #1f77b4;
+        border-bottom: 2px solid #3498db;
         padding-bottom: 0.5rem;
         text-align: center;
         width: 100%;
@@ -99,24 +107,25 @@ st.markdown("""
         border-radius: 12px;
         padding: 1.5rem;
         margin: 1rem 0;
-        border: 1px solid #e1e5e9;
+        border: 1px solid #e8e6e1;
         transition: all 0.3s ease;
         cursor: pointer;
         width: 100%;
         max-width: 900px;
         margin-left: auto;
         margin-right: auto;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
     
     .blog-card:hover {
-        border-color: #1f77b4;
+        border-color: #3498db;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         transform: translateY(-2px);
     }
     
     .blog-title {
         font-size: 1.3rem;
-        color: #1a1a1a;
+        color: #2c3e50;
         font-weight: 600;
         margin-bottom: 0.5rem;
         line-height: 1.4;
@@ -124,23 +133,24 @@ st.markdown("""
     
     .blog-meta {
         font-size: 0.9rem;
-        color: #666;
+        color: #7f8c8d;
         margin-bottom: 0.5rem;
     }
     
     .blog-tags {
         font-size: 0.8rem;
-        color: #1f77b4;
-        background: #e3f2fd;
+        color: #2980b9;
+        background: #ebf5fb;
         padding: 0.2rem 0.6rem;
         border-radius: 12px;
         display: inline-block;
         margin-right: 0.5rem;
         margin-top: 0.5rem;
+        border: 1px solid #d6eaf8;
     }
     
     .blog-date {
-        color: #888;
+        color: #95a5a6;
         font-weight: 500;
     }
     
@@ -148,40 +158,45 @@ st.markdown("""
     .empty-message {
         text-align: center;
         padding: 3rem 2rem;
-        color: #666;
+        color: #7f8c8d;
         font-size: 1.1rem;
-        background: #f8f9fa;
+        background: #fefefe;
         border-radius: 12px;
-        border: 2px dashed #d1d5db;
+        border: 2px dashed #d5dbdb;
         max-width: 900px;
         margin: 0 auto;
     }
     
-    /* Navigasyon Butonları */
-    .nav-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 2rem;
-        padding: 0 1rem;
-    }
-    
-    .nav-button {
-        background: #1f77b4;
-        color: white;
-        border: none;
-        padding: 0.75rem 2rem;
+    /* Butonlar */
+    .stButton>button {
         border-radius: 8px;
+        height: 3rem;
         font-weight: 600;
-        cursor: pointer;
+        border: none;
+        background: #3498db;
+        color: white;
         transition: all 0.3s ease;
-        min-width: 120px;
+        padding: 0 1.5rem;
     }
     
-    .nav-button:hover {
-        background: #1668a0;
+    .stButton>button:hover {
+        background: #2980b9;
         transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    /* Form elemanları */
+    .stTextInput>div>div>input {
+        border-radius: 8px;
+        border: 1px solid #d5dbdb;
+        padding: 0.75rem;
+        background: white;
+    }
+    
+    .stTextArea>div>div>textarea {
+        border-radius: 8px;
+        border: 1px solid #d5dbdb;
+        background: white;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -192,12 +207,20 @@ DATA_FILE = Path(__file__).parent / "blog_data.json"
 # Kullanıcı şifresi
 APP_PASSWORD = "enerji2024"
 
-# Veri yükleme ve kaydetme
+# Veri yükleme ve kaydetme - HATA DÜZELTİLMİŞ
 def load_data():
     try:
         if DATA_FILE.exists():
             with open(DATA_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                data = json.load(f)
+                # Eski JSON yapısını yeni yapıya dönüştür
+                if "Bölgeler" not in data["basliklar"]:
+                    data["basliklar"]["Bölgeler"] = [
+                        "Tüm Dünya", "AB", "Avrupa", "Asya", "Orta Asya", "Afrika", 
+                        "Ortadoğu", "Kuzey Amerika", "Güney Amerika", "Avustralya & Okyanusya"
+                    ]
+                    save_data(data)  # Yeni yapıyı kaydet
+                return data
         else:
             initial_data = {
                 "basliklar": {
@@ -224,7 +247,17 @@ def load_data():
             save_data(initial_data)
             return initial_data
     except Exception as e:
-        return {"basliklar": {}, "icerikler": []}
+        st.error(f"Veri yükleme hatası: {e}")
+        # Hata durumunda temel yapıyı dön
+        return {
+            "basliklar": {
+                "Bölgeler": ["Tüm Dünya", "AB", "Avrupa", "Asya"],
+                "Ülkeler": ["Almanya", "Türkiye", "ABD"],
+                "Enerji Kaynakları": ["Doğal Gaz", "Kömür", "Petrol"],
+                "Kategoriler": ["Üretim", "Tüketim", "İthalat"]
+            },
+            "icerikler": []
+        }
 
 def save_data(data):
     try:
@@ -242,8 +275,8 @@ def check_password():
     
     if not st.session_state.authenticated:
         st.markdown("""
-        <div style="max-width: 400px; margin: 100px auto; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-            <h2 style="text-align: center; color: #1a1a1a; margin-bottom: 2rem;">⚡ Enerji Veri Blog</h2>
+        <div style="max-width: 400px; margin: 100px auto; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid #e8e6e1;">
+            <h2 style="text-align: center; color: #2c3e50; margin-bottom: 2rem;">⚡ Enerji Veri Blog</h2>
         </div>
         """, unsafe_allow_html=True)
         
@@ -297,9 +330,17 @@ def main():
     else:
         add_content()
 
-# İçerik Görüntüleme
+# İçerik Görüntüleme - HATA DÜZELTİLMİŞ
 def show_content():
     data = load_data()
+    
+    # Eski yapı kontrolü ve dönüşüm
+    if "Bölgeler" not in data["basliklar"]:
+        data["basliklar"]["Bölgeler"] = [
+            "Tüm Dünya", "AB", "Avrupa", "Asya", "Orta Asya", "Afrika", 
+            "Ortadoğu", "Kuzey Amerika", "Güney Amerika", "Avustralya & Okyanusya"
+        ]
+        save_data(data)
     
     # Simetrik Filtre Container - 4 sütun
     st.markdown('<div class="filter-container">', unsafe_allow_html=True)
@@ -332,13 +373,13 @@ def show_content():
         filtered_content = [c for c in filtered_content if c.get("bolge") == bolge_filter]
     
     if ulke_filter != "Tümü":
-        filtered_content = [c for c in filtered_content if c["ulke"] == ulke_filter]
+        filtered_content = [c for c in filtered_content if c.get("ulke") == ulke_filter]
     
     if enerji_filter != "Tümü":
-        filtered_content = [c for c in filtered_content if c["enerji_kaynagi"] == enerji_filter]
+        filtered_content = [c for c in filtered_content if c.get("enerji_kaynagi") == enerji_filter]
     
     if kategori_filter != "Tümü":
-        filtered_content = [c for c in filtered_content if c["kategori"] == kategori_filter]
+        filtered_content = [c for c in filtered_content if c.get("kategori") == kategori_filter]
     
     # İçerik container
     st.markdown('<div class="content-container">', unsafe_allow_html=True)
@@ -358,11 +399,11 @@ def show_content():
             tags = []
             if content.get("bolge"):
                 tags.append(content["bolge"])
-            if content["ulke"]:
+            if content.get("ulke"):
                 tags.append(content["ulke"])
-            if content["enerji_kaynagi"]:
+            if content.get("enerji_kaynagi"):
                 tags.append(content["enerji_kaynagi"])
-            if content["kategori"]:
+            if content.get("kategori"):
                 tags.append(content["kategori"])
             
             tags_html = "".join([f'<span class="blog-tags">{tag}</span>' for tag in tags])
@@ -381,9 +422,12 @@ def show_content():
             with st.expander("", expanded=False):
                 if content.get("bolge"):
                     st.write("**🌍 Bölge:**", content["bolge"])
-                st.write("**📍 Ülke:**", content["ulke"])
-                st.write("**⚡ Enerji Kaynağı:**", content["enerji_kaynagi"])
-                st.write("**📊 Kategori:**", content["kategori"])
+                if content.get("ulke"):
+                    st.write("**📍 Ülke:**", content["ulke"])
+                if content.get("enerji_kaynagi"):
+                    st.write("**⚡ Enerji Kaynağı:**", content["enerji_kaynagi"])
+                if content.get("kategori"):
+                    st.write("**📊 Kategori:**", content["kategori"])
                 st.markdown("---")
                 st.write(content["icerik_metin"])
                 
@@ -395,7 +439,7 @@ def show_content():
     
     # Daha fazla butonu
     st.markdown("---")
-    st.markdown('<div style="text-align: center; margin: 2rem 0; color: #1f77b4; font-weight: 600;">DAHA FAZLA İÇERİK</div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; margin: 2rem 0; color: #3498db; font-weight: 600;">DAHA FAZLA İÇERİK</div>', unsafe_allow_html=True)
 
 # Yeni İçerik Ekleme
 def add_content():
