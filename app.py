@@ -355,7 +355,7 @@ def add_content():
         col1, col2 = st.columns(2)
         
         with col1:
-            yazar = st.text_input("👤 Yazar", value="SADİ KAYMAZ")
+            yazar = st.text_input("👤 Yazar", value="")
             ulke = st.selectbox("📍 Ülke", data["basliklar"]["Ülkeler"])
             enerji_kaynagi = st.selectbox("⚡ Enerji Kaynağı", data["basliklar"]["Enerji Kaynakları"])
         
