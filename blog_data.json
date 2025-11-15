@@ -1,0 +1,46 @@
+{
+  "basliklar": {
+    "Ülkeler": [
+      "Almanya",
+      "Türkiye",
+      "ABD",
+      "Fransa",
+      "Çin",
+      "Rusya",
+      "Japonya",
+      "İngiltere",
+      "İtalya",
+      "İspanya",
+      "Hindistan",
+      "Brezilya",
+      "Kanada",
+      "Güney Kore",
+      "Avustralya"
+    ],
+    "Enerji Kaynakları": [
+      "Doğal Gaz",
+      "Kömür",
+      "Petrol",
+      "Nükleer",
+      "Hidroelektrik",
+      "Güneş",
+      "Rüzgar",
+      "Biyokütle",
+      "Jeotermal",
+      "Hidrojen"
+    ],
+    "Kategoriler": [
+      "Üretim",
+      "Tüketim",
+      "İthalat",
+      "İhracat",
+      "Fiyat",
+      "Kapasite",
+      "Yatırım",
+      "Politika",
+      "Teknoloji",
+      "Piyasa"
+    ]
+  },
+  "icerikler": []
+}
