@@ -110,7 +110,7 @@ st.markdown("""
 <div class="header">
     <div class="logo">⚡ Enerji Veri Blog</div>
 
-    </div>
+   
 </div>
 """, unsafe_allow_html=True)
 
