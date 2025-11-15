@@ -109,8 +109,7 @@ if 'active_tab' not in st.session_state:
 st.markdown("""
 <div class="header">
     <div class="logo">⚡ Enerji Veri Blog</div>
-    <div class="nav-container">
-        <div class="nav-item" onclick="logout()">Çıkış</div>
+
     </div>
 </div>
 """, unsafe_allow_html=True)
