@@ -4,7 +4,7 @@ from datetime import datetime
 
 # Sayfa ayarı
 st.set_page_config(
-    page_title="Enerji Verileri",
+    page_title="Enerji Notları",
     page_icon="⚡",
     layout="wide"
 )
@@ -15,7 +15,7 @@ def check_password():
         st.session_state.authenticated = False
     
     if not st.session_state.authenticated:
-        st.title("🔐 Enerji Veri Blog - Giriş")
+        st.title("🔐 Enerji Notları - Giriş")
         password = st.text_input("Şifre:", type="password")
         if st.button("Giriş Yap"):
             if password == "enerji2024":
@@ -93,6 +93,15 @@ st.markdown("""
     .recent-item:hover {
         background: #e9ecef;
     }
+    
+    .expand-text {
+        text-align: center;
+        color: #3498db;
+        font-weight: bold;
+        margin-top: 10px;
+        padding: 5px;
+        border-top: 1px solid #eee;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -112,7 +121,7 @@ if 'selected_content' not in st.session_state:
 # Header
 st.markdown("""
 <div class="main-header">
-    <div style="font-size: 32px; font-weight: bold;">⚡ Enerji Veri Blog</div>
+    <div style="font-size: 32px; font-weight: bold;">⚡ Enerji Notları</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -145,26 +154,28 @@ with main_col:
             content = st.session_state.selected_content
             st.markdown("## 📖 İçerik Detayı")
             
-            item_class = "content-item"
-            if content["type"] == "featured":
-                item_class += " featured-item"
-            elif content["type"] == "news":
-                item_class += " news-item"
-            
-            st.markdown(f"""
-            <div class="{item_class}">
-                <h2>{content['title']}</h2>
-                {f"<h4 style='color: #666;'>{content['subtitle']}</h4>" if content.get('subtitle') else ""}
-                <p><strong>🌍 Ülke:</strong> {content.get('country', 'Türkiye')} | <strong>📍 Bölge:</strong> {content.get('region', 'Ankara')}</p>
-                <p><strong>📊 Enerji Kalemi:</strong> {content.get('energy_type', 'Elektrik')}</p>
-                <p><strong>📅 Tarih:</strong> {content.get('date', '')}</p>
-                <div style="margin: 20px 0; padding: 20px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; line-height: 1.6;">
-                    {content['content'].replace(chr(10), '<br>')}
-                </div>
-                {f'<div class="highlight"><strong>💡 Önemli Bilgi:</strong> {content.get("highlight", "")}</div>' if content.get("highlight") else ""}
-                {f'<p><strong>👤 Yazar:</strong> {content.get("author", "")}</p>' if content.get("author") else ""}
-            </div>
-            """, unsafe_allow_html=True)
+            # Saf Streamlit komutları ile içerik gösterimi
+            with st.container():
+                st.markdown(f"### {content['title']}")
+                if content.get('subtitle'):
+                    st.markdown(f"**{content['subtitle']}**")
+                
+                col_info1, col_info2 = st.columns(2)
+                with col_info1:
+                    st.write(f"**🌍 Ülke:** {content.get('country', 'Türkiye')}")
+                    st.write(f"**📊 Enerji Kalemi:** {content.get('energy_type', 'Elektrik')}")
+                with col_info2:
+                    st.write(f"**📍 Bölge:** {content.get('region', 'Ankara')}")
+                    st.write(f"**📅 Tarih:** {content.get('date', '')}")
+                
+                st.markdown("---")
+                st.write(content['content'])
+                
+                if content.get('highlight'):
+                    st.info(f"**💡 Önemli Bilgi:** {content.get('highlight', '')}")
+                
+                if content.get('author'):
+                    st.write(f"**👤 Yazar:** {content.get('author', '')}")
             
             # Butonlar
             col_back, col_space, col_delete = st.columns([2, 3, 1])
@@ -188,76 +199,60 @@ with main_col:
                 for i, content in enumerate(st.session_state.contents):
                     is_expanded = st.session_state.expanded_items.get(content["id"], False)
                     
-                    item_class = "content-item"
-                    if content["type"] == "featured":
-                        item_class += " featured-item"
-                    elif content["type"] == "news":
-                        item_class += " news-item"
-                    
-                    # İçerik önizleme
-                    content_preview = content['content']
-                    if not is_expanded and len(content['content']) > 200:
-                        content_preview = content['content'][:200] + "..."
-                    
-                    if is_expanded:
-                        # Genişletilmiş görünüm
-                        st.markdown(f"""
-                        <div class="{item_class}">
-                            <h3>{content['title']}</h3>
-                            {f"<h5 style='color: #666;'>{content['subtitle']}</h5>" if content.get('subtitle') else ""}
-                            <p><strong>🌍 Ülke:</strong> {content.get('country', 'Türkiye')} | <strong>📍 Bölge:</strong> {content.get('region', 'Ankara')}</p>
-                            <p><strong>📊 Enerji Kalemi:</strong> {content.get('energy_type', 'Elektrik')} | <strong>📅 Tarih:</strong> {content.get('date', '')}</p>
-                            <div style="margin: 15px 0; line-height: 1.6;">
-                                {content['content'].replace(chr(10), '<br>')}
-                            </div>
-                            {f'<div class="highlight"><strong>💡 Önemli Bilgi:</strong> {content.get("highlight", "")}</div>' if content.get("highlight") else ""}
-                            {f'<p><strong>👤 Yazar:</strong> {content.get("author", "")}</p>' if content.get("author") else ""}
-                        </div>
-                        """, unsafe_allow_html=True)
+                    # Container ile içerik
+                    with st.container():
+                        # Başlık ve bilgiler
+                        st.markdown(f"### {content['title']}")
+                        if content.get('subtitle'):
+                            st.markdown(f"*{content['subtitle']}*")
                         
-                        col_btn1, col_btn2, col_btn3 = st.columns([1, 3, 1])
+                        col_info1, col_info2 = st.columns(2)
+                        with col_info1:
+                            st.write(f"**🌍 Ülke:** {content.get('country', 'Türkiye')}")
+                            st.write(f"**📊 Enerji Kalemi:** {content.get('energy_type', 'Elektrik')}")
+                        with col_info2:
+                            st.write(f"**📍 Bölge:** {content.get('region', 'Ankara')}")
+                            st.write(f"**📅 Tarih:** {content.get('date', '')}")
+                        
+                        # İçerik
+                        if is_expanded:
+                            st.write(content['content'])
+                            if content.get('highlight'):
+                                st.info(f"**💡 Önemli Bilgi:** {content.get('highlight', '')}")
+                            if content.get('author'):
+                                st.write(f"**👤 Yazar:** {content.get('author', '')}")
+                        else:
+                            # Önizleme
+                            preview = content['content']
+                            if len(preview) > 200:
+                                preview = preview[:200] + "..."
+                            st.write(preview)
+                            st.markdown('<div class="expand-text">▼ Daha fazla göster</div>', unsafe_allow_html=True)
+                        
+                        # Butonlar
+                        col_btn1, col_btn2, col_btn3, col_btn4 = st.columns([1, 1, 1, 1])
+                        
                         with col_btn1:
-                            if st.button("▲ Daralt", key=f"collapse_{i}", use_container_width=True):
-                                st.session_state.expanded_items[content["id"]] = False
-                                st.rerun()
-                        with col_btn3:
+                            if is_expanded:
+                                if st.button("▲ Daralt", key=f"collapse_{i}", use_container_width=True):
+                                    st.session_state.expanded_items[content["id"]] = False
+                                    st.rerun()
+                            else:
+                                if st.button("▼ Genişlet", key=f"expand_{i}", use_container_width=True):
+                                    st.session_state.expanded_items[content["id"]] = True
+                                    st.rerun()
+                        
+                        with col_btn2:
                             if st.button("📖 Detay", key=f"detail_{i}", use_container_width=True):
                                 st.session_state.selected_content = content
                                 st.rerun()
-                    
-                    else:
-                        # Daraltılmış görünüm
-                        st.markdown(f"""
-                        <div class="{item_class}">
-                            <h3>{content['title']}</h3>
-                            {f"<h5 style='color: #666;'>{content['subtitle']}</h5>" if content.get('subtitle') else ""}
-                            <p><strong>🌍 Ülke:</strong> {content.get('country', 'Türkiye')} | <strong>📍 Bölge:</strong> {content.get('region', 'Ankara')}</p>
-                            <p><strong>📊 Enerji Kalemi:</strong> {content.get('energy_type', 'Elektrik')} | <strong>📅 Tarih:</strong> {content.get('date', '')}</p>
-                            <div style="margin: 15px 0; line-height: 1.6;">
-                                {content_preview.replace(chr(10), '<br>')}
-                            </div>
-                            <div style="text-align: center; color: #3498db; font-weight: bold; margin-top: 10px;">
-                                ▼ Daha fazla göster
-                            </div>
-                        </div>
-                        """, unsafe_allow_html=True)
                         
-                        col_btn1, col_btn2, col_btn3 = st.columns([1, 3, 1])
-                        with col_btn1:
-                            if st.button("▼ Genişlet", key=f"expand_{i}", use_container_width=True):
-                                st.session_state.expanded_items[content["id"]] = True
+                        with col_btn4:
+                            if st.button("🗑️ Sil", key=f"delete_{i}", use_container_width=True):
+                                if content["id"] in st.session_state.expanded_items:
+                                    del st.session_state.expanded_items[content["id"]]
+                                st.session_state.contents.pop(i)
                                 st.rerun()
-                        with col_btn3:
-                            if st.button("📖 Detay", key=f"detail_small_{i}", use_container_width=True):
-                                st.session_state.selected_content = content
-                                st.rerun()
-                    
-                    # Silme butonu
-                    if st.button(f"🗑️ Bu İçeriği Sil", key=f"delete_{i}", use_container_width=True):
-                        if content["id"] in st.session_state.expanded_items:
-                            del st.session_state.expanded_items[content["id"]]
-                        st.session_state.contents.pop(i)
-                        st.rerun()
                     
                     st.markdown("---")
 
