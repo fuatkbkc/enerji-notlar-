@@ -27,30 +27,73 @@ st.markdown("""
         font-size: 2.5rem;
         color: #1a1a1a;
         text-align: center;
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
         font-weight: 700;
         letter-spacing: -0.5px;
         width: 100%;
-        padding: 0 2rem;
-    }
-    
-    /* Header container - tam genişlik */
-    .header-container {
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
         padding: 0;
     }
     
-    /* Navigasyon - tam genişlik */
-    .nav-container {
+    /* Filtre Container - Simetrik ve Geniş */
+    .filter-container {
         width: 100%;
-        max-width: 100%;
-        margin: 0;
-        padding: 0 2rem;
+        max-width: 900px;
+        margin: 0 auto 2rem auto;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+        border: 1px solid #e1e5e9;
     }
     
-    /* Blog kartları */
+    /* Filtre Grid - Eşit Genişlik */
+    .filter-grid {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        align-items: end;
+    }
+    
+    .filter-item {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    /* Filtre Başlıkları */
+    .filter-label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        text-align: center;
+    }
+    
+    /* Selectbox Stilleri */
+    .stSelectbox>div>div>div {
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+    }
+    
+    /* İçerik Alanı */
+    .content-container {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    
+    /* Bölüm Başlıkları */
+    .section-header {
+        font-size: 1.5rem;
+        color: #1a1a1a;
+        margin: 2rem 0 1.5rem 0;
+        font-weight: 600;
+        border-bottom: 2px solid #1f77b4;
+        padding-bottom: 0.5rem;
+        text-align: center;
+        width: 100%;
+    }
+    
+    /* Blog Kartları */
     .blog-card {
         background: white;
         border-radius: 12px;
@@ -59,7 +102,8 @@ st.markdown("""
         border: 1px solid #e1e5e9;
         transition: all 0.3s ease;
         cursor: pointer;
-        max-width: 800px;
+        width: 100%;
+        max-width: 900px;
         margin-left: auto;
         margin-right: auto;
     }
@@ -70,99 +114,44 @@ st.markdown("""
         transform: translateY(-2px);
     }
     
-    .blog-title {
-        font-size: 1.3rem;
-        color: #1a1a1a;
-        font-weight: 600;
-        margin-bottom: 2.5rem;
-        line-height: 1.4;
-    }
-    
-    .blog-meta {
-        font-size: 0.9rem;
+    /* Boş İçerik Mesajı */
+    .empty-message {
+        text-align: center;
+        padding: 3rem 2rem;
         color: #666;
-        margin-bottom: 0.5rem;
-    }
-    
-    .blog-author {
-        color: #1f77b4;
-        font-weight: 500;
-    }
-    
-    .blog-date {
-        color: #888;
-    }
-    
-    /* Giriş ekranı */
-    .login-container {
-        max-width: 400px;
-        margin: 100px auto;
-        padding: 2rem;
-        background: white;
+        font-size: 1.1rem;
+        background: #f8f9fa;
         border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border: 2px dashed #d1d5db;
+        max-width: 900px;
+        margin: 0 auto;
     }
     
-    /* Butonlar */
-    .stButton>button {
-        border-radius: 8px;
-        height: 3rem;
-        font-weight: 600;
-        border: none;
+    /* Navigasyon Butonları */
+    .nav-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding: 0 1rem;
+    }
+    
+    .nav-button {
         background: #1f77b4;
         color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
         transition: all 0.3s ease;
-        padding: 0 1.5rem;
+        min-width: 120px;
     }
     
-    .stButton>button:hover {
+    .nav-button:hover {
         background: #1668a0;
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    
-    /* Form elemanları */
-    .stTextInput>div>div>input {
-        border-radius: 8px;
-        border: 1px solid #e1e5e9;
-        padding: 0.75rem;
-    }
-    
-    .stSelectbox>div>div>div {
-        border-radius: 8px;
-    }
-    
-    .stTextArea>div>div>textarea {
-        border-radius: 8px;
-        border: 1px solid #e1e5e9;
-    }
-    
-    /* Bölüm başlıkları */
-    .section-header {
-        font-size: 1.5rem;
-        color: #1a1a1a;
-        margin: 2rem 0 1rem 0;
-        font-weight: 600;
-        border-bottom: 2px solid #1f77b4;
-        padding-bottom: 0.5rem;
-        text-align: center;
-        width: 100%;
-    }
-    
-    /* Daha fazla butonu */
-    .load-more {
-        text-align: center;
-        margin: 2rem 0;
-        color: #1f77b4;
-        font-weight: 600;
-        cursor: pointer;
-    }
-    
-    /* Geniş container */
-    .wide-container {
-        width: 100%;
-        max-width: 100%;
-        padding: 0 2rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -275,36 +264,35 @@ def main():
         add_content()
 
 # İçerik Görüntüleme
+
+# İçerik Görüntüleme kısmında filtreleri şu şekilde değiştir:
 def show_content():
     data = load_data()
     
-    # Filtreleme
+    # Simetrik Filtre Container
+    st.markdown('<div class="filter-container">', unsafe_allow_html=True)
+    st.markdown('<div class="filter-grid">', unsafe_allow_html=True)
+    
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        ulke_filter = st.selectbox("📍 Ülke", ["Tümü"] + data["basliklar"]["Ülkeler"])
+        st.markdown('<div class="filter-label">📍 ÜLKE</div>', unsafe_allow_html=True)
+        ulke_filter = st.selectbox("", ["Tümü"] + data["basliklar"]["Ülkeler"], label_visibility="collapsed")
     
     with col2:
-        enerji_filter = st.selectbox("⚡ Kaynak", ["Tümü"] + data["basliklar"]["Enerji Kaynakları"])
+        st.markdown('<div class="filter-label">⚡ KAYNAK</div>', unsafe_allow_html=True)
+        enerji_filter = st.selectbox("", ["Tümü"] + data["basliklar"]["Enerji Kaynakları"], label_visibility="collapsed")
     
     with col3:
-        kategori_filter = st.selectbox("📊 Kategori", ["Tümü"] + data["basliklar"]["Kategoriler"])
+        st.markdown('<div class="filter-label">📊 KATEGORİ</div>', unsafe_allow_html=True)
+        kategori_filter = st.selectbox("", ["Tümü"] + data["basliklar"]["Kategoriler"], label_visibility="collapsed")
     
-    # İçerikleri filtreleme
-    filtered_content = data["icerikler"]
+    st.markdown('</div></div>', unsafe_allow_html=True)
     
-    if ulke_filter != "Tümü":
-        filtered_content = [c for c in filtered_content if c["ulke"] == ulke_filter]
-    
-    if enerji_filter != "Tümü":
-        filtered_content = [c for c in filtered_content if c["enerji_kaynagi"] == enerji_filter]
-    
-    if kategori_filter != "Tümü":
-        filtered_content = [c for c in filtered_content if c["kategori"] == kategori_filter]
-    
-    # İçerikleri gösterme
-    st.markdown(f'<div class="section-header">EN SON</div>', unsafe_allow_html=True)
-    
+    # İçerik container
+    st.markdown('<div class="content-container">', unsafe_allow_html=True)
+    st.markdown('<div class="section-header">EN SON</div>', unsafe_allow_html=True)
+
     if not filtered_content:
         st.info("🤷‍♂️ Henüz içerik bulunmuyor. İlk içeriği eklemek için 'Yeni' butonuna tıklayın.")
         return
