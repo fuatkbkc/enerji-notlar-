@@ -122,11 +122,11 @@ with col1:
         st.session_state.active_tab = "add"
 
 with col2:
-    if st.button("👁️ İçerikleri Görüntüle", use_container_width=True):
+    if st.button("İçerikleri Görüntüle", use_container_width=True):
         st.session_state.active_tab = "view"
 
 with col3:
-    if st.button("🚪 Çıkış", use_container_width=True):
+    if st.button("Çıkış", use_container_width=True):
         st.session_state.authenticated = False
         st.rerun()
 
