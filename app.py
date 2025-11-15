@@ -18,11 +18,11 @@ st.markdown("""
     /* Ana stil */
     .main {
         padding: 2rem 1rem;
-        max-width: 800px;
+        max-width: 1200px;
         margin: 0 auto;
     }
     
-    /* Header */
+    /* Geniş Header */
     .main-header {
         font-size: 2.5rem;
         color: #1a1a1a;
@@ -30,6 +30,24 @@ st.markdown("""
         margin-bottom: 3rem;
         font-weight: 700;
         letter-spacing: -0.5px;
+        width: 100%;
+        padding: 0 2rem;
+    }
+    
+    /* Header container - tam genişlik */
+    .header-container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Navigasyon - tam genişlik */
+    .nav-container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0 2rem;
     }
     
     /* Blog kartları */
@@ -41,6 +59,9 @@ st.markdown("""
         border: 1px solid #e1e5e9;
         transition: all 0.3s ease;
         cursor: pointer;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
     }
     
     .blog-card:hover {
@@ -84,7 +105,6 @@ st.markdown("""
     
     /* Butonlar */
     .stButton>button {
-        width: 100%;
         border-radius: 8px;
         height: 3rem;
         font-weight: 600;
@@ -92,6 +112,7 @@ st.markdown("""
         background: #1f77b4;
         color: white;
         transition: all 0.3s ease;
+        padding: 0 1.5rem;
     }
     
     .stButton>button:hover {
@@ -124,6 +145,8 @@ st.markdown("""
         font-weight: 600;
         border-bottom: 2px solid #1f77b4;
         padding-bottom: 0.5rem;
+        text-align: center;
+        width: 100%;
     }
     
     /* Daha fazla butonu */
@@ -133,6 +156,13 @@ st.markdown("""
         color: #1f77b4;
         font-weight: 600;
         cursor: pointer;
+    }
+    
+    /* Geniş container */
+    .wide-container {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 2rem;
     }
 </style>
 """, unsafe_allow_html=True)
