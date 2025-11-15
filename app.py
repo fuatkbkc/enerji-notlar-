@@ -208,7 +208,7 @@ def check_password():
     
     if not st.session_state.authenticated:
         st.markdown("""
-        <div class="login-container">
+        <div style="max-width: 400px; margin: 100px auto; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             <h2 style="text-align: center; color: #1a1a1a; margin-bottom: 2rem;">⚡ Enerji Veri Blog</h2>
         </div>
         """, unsafe_allow_html=True)
@@ -264,8 +264,6 @@ def main():
         add_content()
 
 # İçerik Görüntüleme
-
-# İçerik Görüntüleme kısmında filtreleri şu şekilde değiştir:
 def show_content():
     data = load_data()
     
@@ -277,17 +275,29 @@ def show_content():
     
     with col1:
         st.markdown('<div class="filter-label">📍 ÜLKE</div>', unsafe_allow_html=True)
-        ulke_filter = st.selectbox("", ["Tümü"] + data["basliklar"]["Ülkeler"], label_visibility="collapsed")
+        ulke_filter = st.selectbox("ulke_select", ["Tümü"] + data["basliklar"]["Ülkeler"], label_visibility="collapsed")
     
     with col2:
         st.markdown('<div class="filter-label">⚡ KAYNAK</div>', unsafe_allow_html=True)
-        enerji_filter = st.selectbox("", ["Tümü"] + data["basliklar"]["Enerji Kaynakları"], label_visibility="collapsed")
+        enerji_filter = st.selectbox("enerji_select", ["Tümü"] + data["basliklar"]["Enerji Kaynakları"], label_visibility="collapsed")
     
     with col3:
         st.markdown('<div class="filter-label">📊 KATEGORİ</div>', unsafe_allow_html=True)
-        kategori_filter = st.selectbox("", ["Tümü"] + data["basliklar"]["Kategoriler"], label_visibility="collapsed")
+        kategori_filter = st.selectbox("kategori_select", ["Tümü"] + data["basliklar"]["Kategoriler"], label_visibility="collapsed")
     
     st.markdown('</div></div>', unsafe_allow_html=True)
+    
+    # İçerikleri filtreleme - EKSİK OLAN KISIM
+    filtered_content = data["icerikler"]
+    
+    if ulke_filter != "Tümü":
+        filtered_content = [c for c in filtered_content if c["ulke"] == ulke_filter]
+    
+    if enerji_filter != "Tümü":
+        filtered_content = [c for c in filtered_content if c["enerji_kaynagi"] == enerji_filter]
+    
+    if kategori_filter != "Tümü":
+        filtered_content = [c for c in filtered_content if c["kategori"] == kategori_filter]
     
     # İçerik container
     st.markdown('<div class="content-container">', unsafe_allow_html=True)
@@ -308,7 +318,7 @@ def show_content():
         
         with st.container():
             st.markdown(f"""
-            <div class="blog-card" onclick="this.style.backgroundColor='#f8f9fa'">
+            <div class="blog-card">
                 <div class="blog-title">{content['icerik_baslik']}</div>
                 <div class="blog-meta">
                     <span class="blog-author">{short_author}</span> 
@@ -345,7 +355,7 @@ def add_content():
         col1, col2 = st.columns(2)
         
         with col1:
-            yazar = st.text_input("👤 Yazar", value="")
+            yazar = st.text_input("👤 Yazar", value="SADİ KAYMAZ")
             ulke = st.selectbox("📍 Ülke", data["basliklar"]["Ülkeler"])
             enerji_kaynagi = st.selectbox("⚡ Enerji Kaynağı", data["basliklar"]["Enerji Kaynakları"])
         
