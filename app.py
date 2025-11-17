@@ -1,11 +1,32 @@
 import streamlit as st
 import uuid
 from datetime import datetime
+import json
+import os
 
-# Sayfa ayarları
+# ===================== KALICI KAYIT =====================
+DATA_FILE = "enerji_notlari.json"
+
+def save_data():
+    try:
+        with open(DATA_FILE, "w", encoding="utf-8") as f:
+            json.dump(st.session_state.contents, f, ensure_ascii=False, indent=2)
+    except:
+        pass
+
+def load_data():
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except:
+            return []
+    return []
+
+# ===================== SAYFA AYARLARI =====================
 st.set_page_config(page_title="Enerji Notları", page_icon="⚡", layout="wide")
 
-# Şifre kontrolü
+# ===================== ŞİFRE KONTROLÜ =====================
 def check_password():
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
@@ -26,39 +47,10 @@ def check_password():
 
 check_password()
 
-# CSS
-st.markdown("""
-<style>
-    .main-container { max-width: 900px; margin: auto; padding: 20px; }
-    .header { text-align: center; margin: 20px 0; color: #2c3e50; }
-    .search-box { margin: 20px 0; }
-    .add-button { 
-        position: fixed; bottom: 30px; right: 30px; 
-        background: #e74c3c; color: white; font-size: 24px;
-        width: 56px; height: 56px; border-radius: 50%;
-        border: none; box-shadow: 0 4px 12px rgba(231,76,60,0.3);
-        z-index: 1000; cursor: pointer;
-    }
-    .add-button:hover { background: #c0392b; transform: scale(1.1); }
-    .content-card {
-        background: white; border-radius: 12px; padding: 18px;
-        margin: 15px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        border-left: 4px solid #3498db; cursor: pointer;
-        transition: all 0.2s;
-    }
-    .content-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
-    .content-title { font-size: 18px; font-weight: bold; margin: 0 0 8px; color: #2c3e50; }
-    .content-preview { color: #7f8c8d; font-size: 14px; line-height: 1.5; }
-    .content-full { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
-    .meta { font-size: 12px; color: #95a5a6; margin-top: 10px; }
-    .action-btn { font-size: 12px; padding: 4px 8px; margin-right: 5px; }
-    .no-results { text-align: center; color: #95a5a6; font-style: italic; padding: 30px; }
-</style>
-""", unsafe_allow_html=True)
-
-# Session state
+# ===================== VERİ YÜKLEME =====================
 if 'contents' not in st.session_state:
-    st.session_state.contents = []
+    st.session_state.contents = load_data()
+
 if 'expanded' not in st.session_state:
     st.session_state.expanded = {}
 if 'editing' not in st.session_state:
@@ -66,38 +58,70 @@ if 'editing' not in st.session_state:
 if 'search_query' not in st.session_state:
     st.session_state.search_query = ""
 
-# Header
+# ===================== CSS =====================
+st.markdown("""
+<style>
+    .main-container { max-width: 900px; margin: auto; padding: 20px; }
+    .header { text-align: center; margin: 30px 0; color: #2c3e50; }
+    .search-box { margin: 20px 0; }
+    .content-card {
+        background: white; border-radius: 12px; padding: 18px;
+        margin: 15px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border-left: 4px solid #3498db; transition: all 0.2s;
+    }
+    .content-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+    .content-title { font-size: 18px; font-weight: bold; margin: 0 0 8px; color: #2c3e50; }
+    .content-preview { color: #7f8c8d; font-size: 14px; line-height: 1.5; }
+    .content-full { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
+    .meta { font-size: 12px; color: #95a5a6; margin-top: 10px; }
+    .no-results { text-align: center; color: #95a5a6; font-style: italic; padding: 40px; }
+</style>
+""", unsafe_allow_html=True)
+
+# ===================== FAB (Floating Action Button) =====================
+st.markdown("""
+<div style="position: fixed; bottom: 30px; right: 30px; z-index: 1000;">
+    <button onclick="document.getElementById('fab_trigger').click();"
+            style="background:#e74c3c; color:white; border:none; width:64px; height:64px;
+                   border-radius:50%; font-size:32px; font-weight:bold;
+                   box-shadow:0 4px 15px rgba(231,76,60,0.5); cursor:pointer;">
+        +
+    </button>
+</div>
+<button id="fab_trigger" style="display:none;"></button>
+""", unsafe_allow_html=True)
+
+if st.button("", key="fab_hidden", label_visibility="hidden"):
+    st.session_state.editing = "new"
+
+# ===================== HEADER =====================
 st.markdown("<div class='header'><h2>⚡ Enerji Notları</h2></div>", unsafe_allow_html=True)
 st.markdown("<div class='main-container'>", unsafe_allow_html=True)
 
-# ARAMA ÇUBUĞU
+# ===================== ARAMA ÇUBUĞU =====================
 search = st.text_input(
-    "🔍 Arama yapın (başlıkta ara)",
+    "🔍 Arama (başlıkta)",
     value=st.session_state.search_query,
-    placeholder="Örn: elektrik, doğalgaz, almanya...",
+    placeholder="Örn: elektrik, almanya, fiyat...",
     key="search_input",
     label_visibility="collapsed"
 )
 st.session_state.search_query = search.strip().lower()
 
-# Floating + Buton
-if st.button("+", key="add_fab", help="Yeni not ekle"):
-    st.session_state.editing = "new"
-
-# Yeni Ekleme / Düzenleme Formu
+# ===================== YENİ / DÜZENLE FORMU =====================
 if st.session_state.editing:
     is_new = st.session_state.editing == "new"
     edit_content = None
     if not is_new:
         edit_content = next((c for c in st.session_state.contents if c["id"] == st.session_state.editing), None)
 
-    with st.form(key="edit_form", clear_on_submit=True):
+    with st.form("edit_form", clear_on_submit=True):
         title = st.text_input("Başlık *", value=edit_content["title"] if edit_content else "")
-        content = st.text_area("İçerik *", height=150, value=edit_content["content"] if edit_content else "")
+        content = st.text_area("İçerik *", height=180, value=edit_content["content"] if edit_content else "")
 
         col1, col2 = st.columns(2)
         with col1:
-            if st.form_submit_button("Kaydet", use_container_width=True):
+            if st.form_submit_button("💾 Kaydet", use_container_width=True):
                 if not title.strip() or not content.strip():
                     st.error("Başlık ve içerik boş olamaz!")
                 else:
@@ -113,76 +137,67 @@ if st.session_state.editing:
                         idx = next(i for i, c in enumerate(st.session_state.contents) if c["id"] == edit_content["id"])
                         st.session_state.contents[idx] = new_item
                     st.session_state.editing = None
-                    st.success("Kaydedildi!")
+                    st.success("✅ Kaydedildi!")
+                    save_data()
                     st.rerun()
         with col2:
-            if st.form_submit_button("İptal", use_container_width=True):
+            if st.form_submit_button("❌ İptal", use_container_width=True):
                 st.session_state.editing = None
                 st.rerun()
 
-# FİLTRELENMİŞ İÇERİKLER
-filtered_contents = [
+# ===================== İÇERİK LİSTESİ =====================
+filtered = [
     c for c in st.session_state.contents
-    if st.session_state.search_query == "" or st.session_state.search_query in c["title"].lower()
+    if not st.session_state.search_query or st.session_state.search_query in c["title"].lower()
 ]
 
-# Arama Sonucu Yoksa
-if st.session_state.search_query and not filtered_contents:
-    st.markdown(f"<div class='no-results'>'{st.session_state.search_query}' ile eşleşen not bulunamadı.</div>", unsafe_allow_html=True)
+if st.session_state.search_query and not filtered:
+    st.markdown(f"<div class='no-results'>Arama sonucu bulunamadı: <strong>{search}</strong></div>", unsafe_allow_html=True)
+elif not st.session_state.contents:
+    st.info("Henüz not eklenmedi. Sağ alttaki kırmızı '+' butonuna tıklayarak yeni not ekleyin.")
 else:
-    # Son eklenen en üstte
-    for content in reversed(filtered_contents):
-        content_id = content["id"]
-        is_expanded = st.session_state.expanded.get(content_id, False)
+    for content in reversed(filtered):
+        cid = content["id"]
+        expanded = st.session_state.expanded.get(cid, False)
 
         with st.container():
-            # Kart başlığı (tıklanınca açılır)
-            if st.button(
-                f"**{content['title']}**",
-                key=f"title_{content_id}",
-                use_container_width=True,
-                help="Tıkla → içerik açılsın"
-            ):
-                st.session_state.expanded[content_id] = True
+            if st.button(f"**{content['title']}**", key=f"open_{cid}", use_container_width=True):
+                st.session_state.expanded[cid] = True
                 st.rerun()
 
-            # Önizleme (kapalıyken)
-            if not is_expanded:
-                preview = content['content']
-                if len(preview) > 120:
-                    preview = preview[:120] + "..."
+            if not expanded:
+                preview = content['content'][:130] + "..." if len(content['content']) > 130 else content['content']
                 st.markdown(f"<div class='content-preview'>{preview}</div>", unsafe_allow_html=True)
 
-            # Açık ise tam içerik + butonlar
-            if is_expanded:
-                st.markdown(f"""
-                <div class="content-full">
-                    {content['content'].replace(chr(10), '<br>')}
-                    <div class="meta">Eklenme: {content['date']}</div>
-                </div>
-                """, unsafe_allow_html=True)
+            if expanded:
+                st.markdown(f"<div class='content-full'>{content['content'].replace(chr(10), '<br>')}</div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='meta'>Eklenme: {content['date']}</div>", unsafe_allow_html=True)
 
-                col1, col2, col3 = st.columns([1, 1, 3])
-                with col1:
-                    if st.button("✏️ Düzenle", key=f"edit_{content_id}"):
-                        st.session_state.editing = content_id
+                c1, c2, c3 = st.columns([1, 1, 4])
+                with c1:
+                    if st.button("✏️ Düzenle", key=f"edit_{cid}"):
+                        st.session_state.editing = cid
                         st.rerun()
-                with col2:
-                    if st.button("↑ Kapat", key=f"collapse_{content_id}"):
-                        st.session_state.expanded[content_id] = False
+                with c2:
+                    if st.button("↑ Kapat", key=f"close_{cid}"):
+                        st.session_state.expanded[cid] = False
                         st.rerun()
-                with col3:
-                    if st.button("🗑️ Sil", key=f"delete_{content_id}"):
-                        st.session_state.contents = [c for c in st.session_state.contents if c["id"] != content_id]
-                        st.session_state.expanded.pop(content_id, None)
+                with c3:
+                    if st.button("🗑️ Sil", key=f"del_{cid}"):
+                        st.session_state.contents = [c for c in st.session_state.contents if c["id"] != cid]
+                        st.session_state.expanded.pop(cid, None)
+                        save_data()
                         st.rerun()
-
                 st.markdown("---")
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-# Çıkış
+# ===================== OTOMATİK KAYDET =====================
+save_data()
+
+# ===================== ÇIKIŞ =====================
 with st.sidebar:
+    st.markdown("### ⚙️ Ayarlar")
     if st.button("Çıkış Yap"):
         st.session_state.authenticated = False
         st.rerun()
