@@ -24,7 +24,7 @@ def load_data():
     return []
 
 # ===================== SAYFA AYARLARI =====================
-st.set_page_config(page_title="Enerji Notları", page_icon="⚡", layout="wide")
+st.set_page_config(page_title="Enerji Notları", page_icon="Lightning", layout="wide")
 
 # ===================== ŞİFRE KONTROLÜ =====================
 def check_password():
@@ -32,7 +32,7 @@ def check_password():
         st.session_state.authenticated = False
     
     if not st.session_state.authenticated:
-        st.markdown("<h1 style='text-align:center;'>⚡ Enerji Notları</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align:center;'>Lightning Enerji Notları</h1>", unsafe_allow_html=True)
         st.markdown("<p style='text-align:center;'>Giriş yapın</p>", unsafe_allow_html=True)
         password = st.text_input("Şifre:", type="password", label_visibility="collapsed")
         col1, col2, col3 = st.columns([1, 1, 1])
@@ -58,57 +58,55 @@ if 'editing' not in st.session_state:
 if 'search_query' not in st.session_state:
     st.session_state.search_query = ""
 
-# ===================== CSS =====================
+# ===================== CSS + FAB BUTON =====================
 st.markdown("""
 <style>
-    .main-container { max-width: 900px; margin: auto; padding: 20px; }
+    .main-container { max-width: 900px; margin: auto; padding: 20px 20px 80px 20px; }
     .header { text-align: center; margin: 30px 0; color: #2c3e50; }
-    .search-box { margin: 20px 0; }
-    .content-card {
-        background: white; border-radius: 12px; padding: 18px;
-        margin: 15px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        border-left: 4px solid #3498db; transition: all 0.2s;
-    }
-    .content-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
-    .content-title { font-size: 18px; font-weight: bold; margin: 0 0 8px; color: #2c3e50; }
     .content-preview { color: #7f8c8d; font-size: 14px; line-height: 1.5; }
     .content-full { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
     .meta { font-size: 12px; color: #95a5a6; margin-top: 10px; }
     .no-results { text-align: center; color: #95a5a6; font-style: italic; padding: 40px; }
-    .fab-container {
-        position: fixed; bottom: 30px; right: 30px; z-index: 1000;
+    
+    /* Floating Action Button */
+    .fab {
+        position: fixed !important;
+        bottom: 30px;
+        right: 30px;
+        z-index: 1000;
     }
-    .stButton > button {
-        background: #e74c3c !important; color: white !important;
-        border: none !important; width: 64px !important; height: 64px !important;
-        border-radius: 50% !important; font-size: 32px !important; font-weight: bold !important;
+    .fab > button {
+        background: #e74c3c !important;
+        color: white !important;
+        border: none !important;
+        width: 64px !important;
+        height: 64px !important;
+        border-radius: 50% !important;
+        font-size: 32px !important;
+        font-weight: bold !important;
         box-shadow: 0 4px 15px rgba(231,76,60,0.5) !important;
     }
-    .stButton > button:hover {
-        background: #c0392b !important; transform: scale(1.05) !important;
+    .fab > button:hover {
+        background: #c0392b !important;
+        transform: scale(1.1) !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-if st.button("➕\nİçerik Ekle", key="fab_simple", help="Yeni not ekle"):
-    st.session_state.editing = "new"
-
-# ===================== FAB (Stabil Versiyon) =====================
+# ===================== FAB BUTON (TEK VE DOĞRU) =====================
 with st.container():
-    col1, col2 = st.columns([3, 1])
-    with col1:
-        st.empty()  # Boş alan
-    with col2:
-        if st.button("+", key="fab_simple", help="Yeni not ekle"):
-            st.session_state.editing = "new"
+    st.markdown('<div class="fab">', unsafe_allow_html=True)
+    if st.button("+", key="fab_add_new"):
+        st.session_state.editing = "new"
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ===================== HEADER =====================
-st.markdown("<div class='header'><h2>⚡ Enerji Notları</h2></div>", unsafe_allow_html=True)
+st.markdown("<div class='header'><h2>Lightning Enerji Notları</h2></div>", unsafe_allow_html=True)
 st.markdown("<div class='main-container'>", unsafe_allow_html=True)
 
 # ===================== ARAMA ÇUBUĞU =====================
 search = st.text_input(
-    "🔍 Arama (başlıkta)",
+    "Arama (başlıkta)",
     value=st.session_state.search_query,
     placeholder="Örn: elektrik, almanya, fiyat...",
     key="search_input",
@@ -125,11 +123,11 @@ if st.session_state.editing:
 
     with st.form("edit_form", clear_on_submit=True):
         title = st.text_input("Başlık *", value=edit_content["title"] if edit_content else "")
-        content = st.text_area("İçerik *", height=180, value=edit_content["content"] if edit_content else "")
+        content = st.text_area("İçerik *", height=200, value=edit_content["content"] if edit_content else "")
 
         col1, col2 = st.columns(2)
         with col1:
-            if st.form_submit_button("💾 Kaydet", use_container_width=True):
+            if st.form_submit_button("Kaydet", use_container_width=True):
                 if not title.strip() or not content.strip():
                     st.error("Başlık ve içerik boş olamaz!")
                 else:
@@ -145,11 +143,11 @@ if st.session_state.editing:
                         idx = next(i for i, c in enumerate(st.session_state.contents) if c["id"] == edit_content["id"])
                         st.session_state.contents[idx] = new_item
                     st.session_state.editing = None
-                    st.success("✅ Kaydedildi!")
+                    st.success("Kaydedildi!")
                     save_data()
                     st.rerun()
         with col2:
-            if st.form_submit_button("❌ İptal", use_container_width=True):
+            if st.form_submit_button("İptal", use_container_width=True):
                 st.session_state.editing = None
                 st.rerun()
 
@@ -160,9 +158,9 @@ filtered = [
 ]
 
 if st.session_state.search_query and not filtered:
-    st.markdown(f"<div class='no-results'>Arama sonucu bulunamadı: <strong>{search}</strong></div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='no-results'>'{search}' ile eşleşen not bulunamadı.</div>", unsafe_allow_html=True)
 elif not st.session_state.contents:
-    st.info("Henüz not eklenmedi. Sağ alttaki kırmızı '+' butonuna tıklayarak yeni not ekleyin.")
+    st.info("Henüz not eklenmedi. Sağ alttaki kırmızı '+' butonuna tıklayın.")
 else:
     for content in reversed(filtered):
         cid = content["id"]
@@ -174,7 +172,7 @@ else:
                 st.rerun()
 
             if not expanded:
-                preview = content['content'][:130] + "..." if len(content['content']) > 130 else content['content']
+                preview = content['content'][:140] + ("..." if len(content['content']) > 140 else "")
                 st.markdown(f"<div class='content-preview'>{preview}</div>", unsafe_allow_html=True)
 
             if expanded:
@@ -183,15 +181,15 @@ else:
 
                 c1, c2, c3 = st.columns([1, 1, 4])
                 with c1:
-                    if st.button("✏️ Düzenle", key=f"edit_{cid}"):
+                    if st.button("Düzenle", key=f"edit_{cid}"):
                         st.session_state.editing = cid
                         st.rerun()
                 with c2:
-                    if st.button("↑ Kapat", key=f"close_{cid}"):
+                    if st.button("Kapat", key=f"close_{cid}"):
                         st.session_state.expanded[cid] = False
                         st.rerun()
                 with c3:
-                    if st.button("🗑️ Sil", key=f"del_{cid}"):
+                    if st.button("Sil", key=f"del_{cid}"):
                         st.session_state.contents = [c for c in st.session_state.contents if c["id"] != cid]
                         st.session_state.expanded.pop(cid, None)
                         save_data()
@@ -205,7 +203,7 @@ save_data()
 
 # ===================== ÇIKIŞ =====================
 with st.sidebar:
-    st.markdown("### ⚙️ Ayarlar")
+    st.markdown("### Ayarlar")
     if st.button("Çıkış Yap"):
         st.session_state.authenticated = False
         st.rerun()
