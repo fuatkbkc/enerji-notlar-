@@ -90,6 +90,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+if st.button("➕\nİçerik Ekle", key="fab_simple", help="Yeni not ekle"):
+    st.session_state.editing = "new"
+
 # ===================== FAB (Stabil Versiyon) =====================
 with st.container():
     col1, col2 = st.columns([3, 1])
