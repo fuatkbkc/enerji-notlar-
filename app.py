@@ -75,24 +75,29 @@ st.markdown("""
     .content-full { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
     .meta { font-size: 12px; color: #95a5a6; margin-top: 10px; }
     .no-results { text-align: center; color: #95a5a6; font-style: italic; padding: 40px; }
+    .fab-container {
+        position: fixed; bottom: 30px; right: 30px; z-index: 1000;
+    }
+    .stButton > button {
+        background: #e74c3c !important; color: white !important;
+        border: none !important; width: 64px !important; height: 64px !important;
+        border-radius: 50% !important; font-size: 32px !important; font-weight: bold !important;
+        box-shadow: 0 4px 15px rgba(231,76,60,0.5) !important;
+    }
+    .stButton > button:hover {
+        background: #c0392b !important; transform: scale(1.05) !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# ===================== FAB (Floating Action Button) =====================
-st.markdown("""
-<div style="position: fixed; bottom: 30px; right: 30px; z-index: 1000;">
-    <button onclick="document.getElementById('fab_trigger').click();"
-            style="background:#e74c3c; color:white; border:none; width:64px; height:64px;
-                   border-radius:50%; font-size:32px; font-weight:bold;
-                   box-shadow:0 4px 15px rgba(231,76,60,0.5); cursor:pointer;">
-        +
-    </button>
-</div>
-<button id="fab_trigger" style="display:none;"></button>
-""", unsafe_allow_html=True)
-
-if st.button("", key="fab_hidden", label_visibility="hidden"):
-    st.session_state.editing = "new"
+# ===================== FAB (Stabil Versiyon) =====================
+with st.container():
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.empty()  # Boş alan
+    with col2:
+        if st.button("+", key="fab_simple", help="Yeni not ekle"):
+            st.session_state.editing = "new"
 
 # ===================== HEADER =====================
 st.markdown("<div class='header'><h2>⚡ Enerji Notları</h2></div>", unsafe_allow_html=True)
